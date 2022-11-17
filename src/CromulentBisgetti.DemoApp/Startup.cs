@@ -32,11 +32,16 @@ namespace CromulentBisgetti.DemoApp
             });
 
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-                .AddJsonOptions(options =>
-                {
-                    options.SerializerSettings.ContractResolver = null;
-                });
+            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+            //    .AddJsonOptions(options =>
+            //    {
+            //        options.SerializerSettings.ContractResolver = null;
+            //    });
+
+            services.AddMvc().AddNewtonsoftJson(o =>
+            {
+                o.SerializerSettings.ContractResolver = null;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,8 +60,16 @@ namespace CromulentBisgetti.DemoApp
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseRouting();
 
-            app.UseMvcWithDefaultRoute();
+            //app.UseMvcWithDefaultRoute();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+            });
         }
     }
 }
